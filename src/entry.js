@@ -19,9 +19,7 @@ export default function Entry() {
   let currentPage = useRef(1)
 
   let options = {
-    root: null,
-    rootMargin: "0px",
-    threshold: [0.0]
+    threshold: [0.1]
   };
 
   const apiCall = async (dataSet) => {
@@ -36,10 +34,8 @@ export default function Entry() {
 
   const callFunc = async (dataSet) => {
     let moviesJSON = await apiCall(dataSet);
-    console.log("updated data ", moviesJSON)
     let updatedData = [...data, ...moviesJSON?.page["content-items"].content];
     currentPage.current++;
-    console.log("updated data ", updatedData)
     dispatch(saveResult([...updatedData]))
   };
   
@@ -52,7 +48,7 @@ export default function Entry() {
   useEffect(() => {
     if (data.length > 0) {
       let observer = new IntersectionObserver(callupdate, options);
-      let target = document.querySelector(`#scroll-${data.length - 6}`);
+      let target = document.querySelector(`#scroll-${data.length-1}`);
       if(target){
         observer.observe(target);
       }
@@ -87,7 +83,6 @@ export default function Entry() {
 
   return (
     <div className="App">
-      {console.log("data is ", data)}
       <div className="search">
         <SearchBar 
           onSearch={handleSearch} 
